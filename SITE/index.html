@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Aethernyx officer capability studio for role-based diagnostics, practice, and governance readiness.">
+    <title>Aethernyx | Officer Capability Studio</title>
+    
+    <!-- Modern Typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Chart.js for Progression & Activity Telemetry -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+
+    <!-- Dedicated External Stylesheet -->
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='4' y='4' width='56' height='56' rx='14' fill='%231f2a44' transform='rotate(-7 32 32)'/%3E%3Ctext x='32' y='44' text-anchor='middle' font-family='Arial,sans-serif' font-size='38' font-weight='800' fill='white'%3EA%3C/text%3E%3C/svg%3E">
+</head>
+<body>
+
+<div id="login-view" class="login-wrapper">
+    <div class="login-container">
+        <div class="login-info-side">
+            <div class="brand-badge">
+                <span class="brand-mark">A</span>
+                <span><strong>Aethernyx</strong><small>AI Competency & Governance Engine</small></span>
+            </div>
+            <h1>Empower civil governance with verified AI capabilities.</h1>
+            <p class="lede">MoSPI-aligned capability building for India's Official Statistical System, evidence-led policy, and responsible data practice.</p>
+            
+            <div class="feature-pills">
+                <div class="pill">
+                    <span class="pill-badge-icon teal">◬</span>
+                    <div>
+                        <strong>Cadre Gap Diagnostics</strong>
+                        <p>Real-time calculation against target civil competency standards</p>
+                    </div>
+                </div>
+                <div class="pill">
+                    <span class="pill-badge-icon coral">✦</span>
+                    <div>
+                        <strong>Adaptive Situation Simulations</strong>
+                        <p>Scored scenario evaluations mapped to your custom backend</p>
+                    </div>
+                </div>
+                <div class="pill">
+                    <span class="pill-badge-icon yellow">🛡</span>
+                    <div>
+                        <strong>Statutory Audit Trail</strong>
+                        <p>MoSPI statistical quality, metadata, and release-readiness checks</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="login-card-side">
+            <div class="auth-card">
+                <div class="auth-header">
+                    <span class="eyebrow accent">Authentication</span>
+                    <h2>Officer Workspace Login</h2>
+                    <p class="lede">Sign in to continue your capability journey</p>
+                </div>
+
+                <form id="login-form" onsubmit="handleLogin(event)">
+                    <div class="form-group">
+                        <label for="officer-name">Officer Name</label>
+                        <input type="text" id="officer-name" placeholder="e.g., Rajesh Kumar" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="officer-id">Department ID</label>
+                        <input type="text" id="officer-id" placeholder="e.g., GOV-AI-2026" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="officer-email">Registered Email</label>
+                        <input type="email" id="officer-email" placeholder="officer@department.gov.in" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="officer-password">Security PIN / Password</label>
+                        <div class="password-field">
+                            <input type="password" id="officer-password" placeholder="••••••••" required>
+                            <button type="button" class="password-toggle" onclick="togglePassword('officer-password', this)">Show</button>
+                        </div>
+                        <small class="privacy-note">Submit your credentials once. The OTP field will appear after verification.</small>
+                    </div>
+
+                    <p id="auth-error-msg" class="error-msg" style="display: none;"></p>
+
+                    <div class="form-group" id="login-otp-group" style="display: none;">
+                        <label for="officer-otp">One-Time Password</label>
+                        <input type="text" id="officer-otp" inputmode="numeric" autocomplete="one-time-code" placeholder="Enter the 6-digit OTP" maxlength="6" pattern="[0-9]{6}">
+                        <small class="privacy-note">A verification code was sent to your registered email.</small>
+                    </div>
+
+                    <button type="submit" class="button button-coral full-button" id="login-submit-button" style="margin-top: 8px;">
+                        <span>Enter Command Portal</span> <span>&rarr;</span>
+                    </button>
+                </form>
+
+                <button type="button" class="button button-light full-button auth-switch-button" onclick="showRegisterView()">
+                    New officer? Register here
+                </button>
+                <button type="button" class="text-button auth-link-button" onclick="showForgotPasswordView()">
+                    Forgot password?
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="register-view" class="login-wrapper" style="display: none;">
+    <div class="login-container register-container">
+        <div class="login-info-side">
+            <div class="brand-badge">
+                <span class="brand-mark">A</span>
+                <span><strong>Aethernyx</strong><small>AI Competency & Governance Engine</small></span>
+            </div>
+            <h1>Create your officer profile.</h1>
+            <p class="lede">Register once to create a local competency workspace and track your governance readiness.</p>
+        </div>
+
+        <div class="login-card-side">
+            <div class="auth-card">
+                <div class="auth-header">
+                    <span class="eyebrow accent">New Officer</span>
+                    <h2>Create Account</h2>
+                    <p class="lede">Set up your department access credentials</p>
+                </div>
+
+                <form id="register-form" onsubmit="handleRegister(event)">
+                    <div class="form-group">
+                        <label for="register-name">Officer Name</label>
+                        <input type="text" id="register-name" placeholder="e.g., Rajesh Kumar" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="register-id">Department ID</label>
+                        <input type="text" id="register-id" placeholder="e.g., GOV-AI-2026" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="register-email">Official Email</label>
+                        <input type="email" id="register-email" placeholder="officer@department.gov.in" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="register-password">Security PIN / Password</label>
+                        <div class="password-field">
+                            <input type="password" id="register-password" placeholder="Create a password" required minlength="6">
+                            <button type="button" class="password-toggle" onclick="togglePassword('register-password', this)">Show</button>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="register-confirm-password">Confirm Password</label>
+                        <div class="password-field">
+                            <input type="password" id="register-confirm-password" placeholder="Repeat your password" required minlength="6">
+                            <button type="button" class="password-toggle" onclick="togglePassword('register-confirm-password', this)">Show</button>
+                        </div>
+                    </div>
+
+                    <p id="register-error-msg" class="error-msg" style="display: none;"></p>
+
+                    <button type="submit" class="button button-coral full-button">
+                        Create Account <span>&rarr;</span>
+                    </button>
+                </form>
+
+                <button type="button" class="button button-light full-button auth-switch-button" onclick="showLoginView()">
+                    Already registered? Login
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="forgot-password-view" class="login-wrapper" style="display: none;">
+    <div class="login-container register-container">
+        <div class="login-info-side">
+            <div class="brand-badge">
+                <span class="brand-mark">A</span>
+                <span><strong>Aethernyx</strong><small>AI Competency & Governance Engine</small></span>
+            </div>
+            <h1>Restore your portal access.</h1>
+            <p class="lede">Verify your officer identity with your registered name and email, then create a new password.</p>
+        </div>
+
+        <div class="login-card-side">
+            <div class="auth-card">
+                <div class="auth-header">
+                    <span class="eyebrow accent">Account Recovery</span>
+                    <h2>Forgot Password</h2>
+                    <p class="lede">Reset your local officer portal password</p>
+                </div>
+
+                <form id="forgot-password-form" onsubmit="handlePasswordReset(event)">
+                    <div class="form-group">
+                        <label for="recovery-name">Officer Name</label>
+                        <input type="text" id="recovery-name" placeholder="e.g., Rajesh Kumar" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="recovery-email">Registered Gmail</label>
+                        <input type="email" id="recovery-email" placeholder="officer@gmail.com" required>
+                    </div>
+
+                    <div class="form-group" id="recovery-otp-group" style="display: none;">
+                        <label for="recovery-otp">One-Time Password</label>
+                        <input type="text" id="recovery-otp" inputmode="numeric" autocomplete="one-time-code" placeholder="Enter the 6-digit OTP" maxlength="6" pattern="[0-9]{6}">
+                    </div>
+
+                    <div class="form-group" id="recovery-password-group" style="display: none;">
+                        <label for="recovery-password">New Password</label>
+                        <div class="password-field">
+                            <input type="password" id="recovery-password" placeholder="Create a new password" minlength="6">
+                            <button type="button" class="password-toggle" onclick="togglePassword('recovery-password', this)">Show</button>
+                        </div>
+                    </div>
+
+                    <div class="form-group" id="recovery-confirm-password-group" style="display: none;">
+                        <label for="recovery-confirm-password">Confirm New Password</label>
+                        <div class="password-field">
+                            <input type="password" id="recovery-confirm-password" placeholder="Repeat your new password" minlength="6">
+                            <button type="button" class="password-toggle" onclick="togglePassword('recovery-confirm-password', this)">Show</button>
+                        </div>
+                    </div>
+
+                    <p id="recovery-error-msg" class="error-msg" style="display: none;"></p>
+
+                    <button type="submit" class="button button-coral full-button" id="recovery-submit-button">
+                        Reset Password <span>&rarr;</span>
+                    </button>
+                </form>
+
+                <button type="button" class="button button-light full-button auth-switch-button" onclick="showLoginView()">
+                    Return to Login
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="app-shell" id="app-shell" style="display: none;">
+    <aside class="sidebar" aria-label="Primary navigation">
+        <a class="brand" href="javascript:void(0)" onclick="switchTab('home')">
+            <span class="brand-mark"><span class="brand-letter">A</span></span>
+            <span><strong>Aethernyx</strong><small>competency engine</small></span>
+        </a>
+
+        <div class="side-label">Workspace</div>
+        
+        <nav class="side-nav" id="main-nav">
+            <button class="nav-item active" data-tab="home" onclick="switchTab('home')">
+                <span class="nav-icon">◈</span>Overview
+            </button>
+            <button class="nav-item" data-tab="dashboard" onclick="switchTab('dashboard')">
+                <span class="nav-icon">◬</span>Dashboard
+            </button>
+            <button class="nav-item" data-tab="gap-analysis" onclick="switchTab('gap-analysis')">
+                <span class="nav-icon">⚖</span>Gap Diagnostics
+            </button>
+            <button class="nav-item" data-tab="mcq-generator" onclick="switchTab('mcq-generator')">
+                <span class="nav-icon">✦</span>AI Quiz Lab
+            </button>
+        </nav>
+
+        <div class="sidebar-note">
+            <span class="note-kicker" id="sidebar-cadre-tag">ACTIVE CADRE</span>
+            <strong id="sidebar-cadre-name">MoSPI Statistical System</strong>
+            <p id="sidebar-cadre-desc">Dynamic competency monitoring active.</p>
+        </div>
+
+        <div class="side-footer">
+            <div class="workspace-status">
+                <span class="status-dot" aria-hidden="true"></span>
+                <div>
+                    <strong>Secure workspace</strong>
+                    <small>Progress saved automatically</small>
+                </div>
+            </div>
+            <button type="button" class="text-button signout-button" onclick="handleLogout()">
+                <span>Sign Out</span><span class="signout-icon" aria-hidden="true">⏻</span>
+            </button>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <header class="topbar">
+            <div class="mobile-brand">
+                <span class="brand-mark">A</span>
+                <strong>Aethernyx</strong>
+            </div>
+
+            <div class="topbar-context">
+                <span class="eyebrow" id="topbar-dept-label">National AI Cadre</span>
+                <span class="context-divider">/</span>
+                <span id="current-view-label">Overview</span>
+            </div>
+
+            <div class="topbar-actions">
+                <button type="button" class="theme-toggle" id="theme-toggle" title="Switch to dark mode" aria-label="Switch to dark mode">
+                    <span aria-hidden="true">☾</span>
+                    <span>Dark mode</span>
+                </button>
+                <div class="notification-wrap">
+                    <button type="button" class="notification-toggle" id="notification-toggle" title="Open notifications" aria-label="Open notifications" aria-expanded="false">
+                        <span class="notification-bell" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" focusable="false">
+                                <path d="M18 9a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4" />
+                            </svg>
+                        </span>
+                        <span class="notification-dot" id="notification-dot" aria-hidden="true"></span>
+                    </button>
+                    <div class="notification-panel" id="notification-panel" role="region" aria-label="Notifications" hidden>
+                        <div class="notification-header">
+                            <strong>Notifications</strong>
+                            <button type="button" class="notification-clear" id="notification-clear">Mark all read</button>
+                        </div>
+                        <div class="notification-list" id="notification-list"></div>
+                    </div>
+                </div>
+                <button type="button" class="theme-toggle focus-toggle" id="focus-toggle" title="Enter focus mode" aria-label="Enter focus mode">
+                    <span aria-hidden="true">◌</span>
+                    <span>Focus mode</span>
+                </button>
+                <button type="button" class="profile-chip" onclick="switchTab('profile')" aria-label="Open officer profile">
+                    <span class="avatar" id="officer-avatar">RK</span>
+                    <div class="profile-info">
+                        <span class="profile-name" id="topbar-officer-name">Rajesh Kumar</span>
+                        <small id="topbar-role-badge">Policy Analyst</small>
+                    </div>
+                </button>
+            </div>
+        </header>
+
+        <div class="content-wrap">
+            
+            <section id="home" class="tab-content active">
+                <div class="welcome-row">
+                    <div>
+                        <p class="eyebrow accent">Officer Command Portfolio</p>
+                        <h1 id="home-greeting-heading">Welcome, Rajesh Kumar</h1>
+                        <p class="lede">Track your readiness across MoSPI domains, official releases, and evidence-led decision practice.</p>
+                    </div>
+                    <button class="button button-dark" onclick="switchTab('dashboard')">
+                    View Progress <span>&rarr;</span>
+                    </button>
+                </div>
+
+                <div class="hero-panel">
+                    <div class="hero-copy">
+                        <span class="hero-kicker" id="home-hero-kicker">Priority Competency Remediation</span>
+                        <h2 id="home-hero-title">Strengthen Official Statistics Practice</h2>
+                        <p id="home-hero-desc">Active deficit identified against statutory target standards. Complete situational challenges to restore audit compliance.</p>
+                        <button class="button button-light" id="home-hero-action-btn" onclick="switchTab('mcq-generator')">
+                            Launch Remediation Quiz <span>&rarr;</span>
+                        </button>
+                    </div>
+                    <div class="hero-art" aria-hidden="true">
+                        <div class="art-ring ring-one"></div>
+                        <div class="art-ring ring-two"></div>
+                        <div class="art-bars">
+                            <i></i><i></i><i></i><i></i><i></i>
+                        </div>
+                    </div>
+                </div>
+
+                <section class="panel igot-panel">
+                    <div>
+                        <span class="eyebrow">Learning ecosystem</span>
+                        <h2>iGOT Karmayogi connection</h2>
+                        <p class="lede">Connect your officer workspace to synchronize verified learning progress with the iGOT ecosystem.</p>
+                    </div>
+                    <div class="igot-actions">
+                        <span class="integration-status" id="igot-status">Checking connection...</span>
+                        <button type="button" class="button button-dark" id="igot-connect-btn" onclick="connectIgot()">Connect iGOT</button>
+                        <button type="button" class="button button-light" id="igot-sync-btn" onclick="syncIgotProgress()" disabled>Sync progress</button>
+                    </div>
+                </section>
+
+                <div class="section-heading">
+                    <div>
+                        <span class="eyebrow">Workspaces</span>
+                        <h2>Administrative Modules</h2>
+                    </div>
+                    <span class="updated-label">Live workspace sync</span>
+                </div>
+
+                <div class="catalog-grid">
+                    <article class="catalog-card" onclick="switchTab('dashboard')">
+                        <div class="catalog-color teal-bg">
+                            <span>COMPETENCY</span>
+                            <span id="home-card-score-badge">76% SCORE</span>
+                        </div>
+                        <div class="catalog-body">
+                            <h3>Capability Dashboard</h3>
+                            <p>Inspect verified progression velocity, active session streaks, and performance telemetry.</p>
+                            <span class="catalog-meta">AUDITABLE PROGRESSION &bull; TELEMETRY</span>
+                            <button class="catalog-action">View Dashboard &rarr;</button>
+                        </div>
+                    </article>
+
+                    <article class="catalog-card" onclick="switchTab('gap-analysis')">
+                        <div class="catalog-color coral-bg">
+                            <span>DIAGNOSTICS</span>
+                            <span id="home-card-gap-badge">Δ 18% GAP</span>
+                        </div>
+                        <div class="catalog-body">
+                            <h3>Cadre Gap Diagnostics</h3>
+                            <p>Benchmark verified skill levels against target civil role statutory standards.</p>
+                            <span class="catalog-meta">STATUTORY COMPLIANCE &bull; DELTA MATRIX</span>
+                            <button class="catalog-action">Run Analysis &rarr;</button>
+                        </div>
+                    </article>
+
+                    <article class="catalog-card" onclick="switchTab('mcq-generator')">
+                        <div class="catalog-color yellow-bg">
+                            <span>PRACTICE LAB</span>
+                            <span>ACTIVE</span>
+                        </div>
+                        <div class="catalog-body">
+                            <h3>MoSPI AI Quiz Generator</h3>
+                            <p>Synthesize statistical decision challenges from MoSPI releases, circulars, and learning materials.</p>
+                            <span class="catalog-meta">ADAPTIVE &bull; SITUATIONAL SCENARIOS</span>
+                            <button class="catalog-action">Launch Quiz &rarr;</button>
+                        </div>
+                    </article>
+                </div>
+
+                <div class="panel workflow-panel">
+                    <div class="panel-heading">
+                        <div>
+                            <span class="eyebrow">Upskilling Protocol</span>
+                            <h2>Civil Capability Lifecycle</h2>
+                        </div>
+                        <span class="updated-label">Workspace v3.2</span>
+                    </div>
+
+                    <div class="workflow-steps">
+                        <div class="step-card">
+                            <span class="step-num">01</span>
+                            <div>
+                                <strong>Select Operational Cadre</strong>
+                                <p>Calibrate target benchmarks to your department assignments.</p>
+                            </div>
+                        </div>
+                        <div class="step-card">
+                            <span class="step-num">02</span>
+                            <div>
+                                <strong>Diagnose Variance</strong>
+                                <p>Identify deficits across official releases, survey quality, indicators, and statistical ethics.</p>
+                            </div>
+                        </div>
+                        <div class="step-card">
+                            <span class="step-num">03</span>
+                            <div>
+                                <strong>Log Verified Practice</strong>
+                                <p>Pass scenario evaluations to advance certified standing.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="profile" class="tab-content">
+                <div class="page-heading">
+                    <div>
+                        <p class="eyebrow accent">Officer Profile</p>
+                        <h1 id="profile-heading">Officer Details</h1>
+                        <p class="lede">Your registered identity and competency workspace information.</p>
+                    </div>
+                    <button type="button" class="button button-light" onclick="switchTab('home')">Back to Overview <span>&larr;</span></button>
+                </div>
+
+                <div class="profile-layout">
+                    <section class="panel profile-summary-panel">
+                        <div class="profile-large-avatar" id="profile-avatar">RK</div>
+                        <h2 id="profile-name">Rajesh Kumar</h2>
+                        <p id="profile-role-summary" class="lede">Data Analyst (Official Statistics)</p>
+                        <span class="tag tag-teal">Active Officer Account</span>
+                    </section>
+
+                    <section class="panel profile-details-panel">
+                        <div class="panel-heading">
+                            <div>
+                                <span class="eyebrow">Account Record</span>
+                                <h2>Professional Details</h2>
+                            </div>
+                        </div>
+                        <div class="profile-details-grid">
+                            <div class="profile-detail-item">
+                                <span>Officer Name</span>
+                                <strong id="profile-detail-name">Rajesh Kumar</strong>
+                            </div>
+                            <div class="profile-detail-item">
+                                <span>Department ID</span>
+                                <strong id="profile-detail-department">GOV-AI-2026</strong>
+                            </div>
+                            <div class="profile-detail-item">
+                                <span>Current Cadre</span>
+                                <strong id="profile-detail-cadre">Data Analyst (Official Statistics)</strong>
+                            </div>
+                            <div class="profile-detail-item">
+                                <span>Cadre Category</span>
+                                <strong id="profile-detail-category">Policy &amp; Analytics</strong>
+                            </div>
+                            <div class="profile-detail-item">
+                                <span>Date of Joining</span>
+                                <strong id="profile-detail-joined">Not available</strong>
+                            </div>
+                            <div class="profile-detail-item">
+                                <span>Last Active</span>
+                                <strong id="profile-detail-active">Not available</strong>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </section>
+
+            <section id="dashboard" class="tab-content">
+                <div class="welcome-row">
+                    <div>
+                        <p class="eyebrow accent">Performance Analytics</p>
+                        <h1 id="dashboard-greeting">Officer Portfolio</h1>
+                        <p class="lede">Continuous performance velocity, consistency streaks, and competency progress.</p>
+                    </div>
+                    <button class="button button-light cadre-switch-button" onclick="openRoleModal()" aria-label="Switch operational cadre">
+                        <span>Switch Cadre</span> <span class="cadre-switch-icon">⇅</span>
+                    </button>
+                </div>
+
+                <div class="metric-grid" style="margin-top: 20px;">
+                    <article class="metric-card">
+                        <div class="metric-top">
+                            <span>Cadre Role</span>
+                            <span class="metric-icon teal">◬</span>
+                        </div>
+                        <strong id="user-selected-role" style="font-size: 18px; line-height: 1.2; margin: 12px 0 6px;">Data Analyst</strong>
+                        <p id="user-role-subline">Policy & Public Analytics</p>
+                    </article>
+
+                    <article class="metric-card">
+                        <div class="metric-top">
+                            <span>Competency Score</span>
+                            <span class="metric-icon yellow">✦</span>
+                        </div>
+                        <strong id="score-text">--</strong>
+                        <div class="progress-line">
+                            <span id="competency-progress-bar" style="width: 0%;"></span>
+                        </div>
+                        <p id="competency-score-status">Loading backend data...</p>
+                    </article>
+
+                    <article class="metric-card">
+                        <div class="metric-top">
+                            <span>Consistency Streak</span>
+                            <span class="metric-icon coral">⚡</span>
+                        </div>
+                        <strong id="streak-value">4 <small>days</small></strong>
+                        <p id="streak-rank">Top 12% in Administrative Cohort</p>
+                    </article>
+
+                    <article class="metric-card">
+                        <div class="metric-top">
+                            <span>Audit Standing</span>
+                            <span class="metric-icon blue">🛡</span>
+                        </div>
+                        <strong id="audit-status-badge" style="font-size: 22px; color: var(--teal-deep);">Certified</strong>
+                            <p id="audit-status-sub">MoSPI Statistical Baseline</p>
+                    </article>
+                </div>
+
+                <div class="panel" style="margin-top: 20px;">
+                    <div class="panel-heading">
+                        <div>
+                            <span class="eyebrow">Engagement Intelligence</span>
+                            <h2>Consistency Trends & Score Velocity</h2>
+                        </div>
+                        <span class="updated-label">Live Telemetry</span>
+                    </div>
+
+                    <div class="dashboard-grid" style="margin-top: 14px;">
+                        <div class="chart-box">
+                            <div class="chart-header">
+                                <h4>Daily Diagnostic Assessments</h4>
+                                <span class="tag tag-teal">Current Cycle</span>
+                            </div>
+                            <div class="canvas-wrapper">
+                                <canvas id="dailyActivityChart"></canvas>
+                            </div>
+                        </div>
+
+                        <div class="chart-box">
+                            <div class="chart-header">
+                                <h4>Competency Progression Trend</h4>
+                                <span class="tag tag-coral">Growth Track</span>
+                            </div>
+                            <div class="canvas-wrapper">
+                                <canvas id="competencyTrendChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel" style="margin-top: 20px;">
+                    <div class="panel-heading">
+                        <div>
+                            <span class="eyebrow">Auditable Records</span>
+                            <h2>Diagnostic Evaluation Logs</h2>
+                        </div>
+                        <button class="button button-light" style="padding: 6px 14px;" onclick="exportAuditLogCsv()">Export CSV</button>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="assessment-log-table">
+                            <thead>
+                                <tr>
+                                    <th>Assessment Topic</th>
+                                    <th>Competency Domain</th>
+                                    <th>Date Logged</th>
+                                    <th>Score</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="assessment-log-body">
+                                <!-- Populated dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <section id="gap-analysis" class="tab-content">
+                <div class="page-heading">
+                    <div>
+                        <p class="eyebrow accent">Diagnostics Matrix</p>
+                        <h1>See the gap. Build readiness.</h1>
+                        <p class="lede">Compare verified operational capabilities against national statutory civil role benchmarks.</p>
+                    </div>
+                    <label class="role-select">
+                        Target Cadre
+                        <select id="target-role-dropdown" onchange="handleRoleDropdownChange(this.value)">
+                            <option value="data-analyst">Data Analyst (Official Statistics)</option>
+                            <option value="director-ai">Director of AI & Emerging Tech</option>
+                            <option value="governance-officer">Digital Governance Compliance Lead</option>
+                        </select>
+                    </label>
+                </div>
+
+                <div class="diagnostic-summary">
+                    <div class="diagnostic-score">
+                        <span class="eyebrow" style="color: var(--teal);">Readiness Score</span>
+                        <strong id="overall-alignment-pct">82%</strong>
+                        <div class="score-dial" id="score-dial-element"></div>
+                        <p id="alignment-deficit">Δ 18% deficit against civil target standard.</p>
+                    </div>
+                    <div class="gap-summary-copy">
+                        <span class="tag tag-coral" id="critical-gap-count">1 Priority Area</span>
+                        <h2>Remediation roadmaps calibrated.</h2>
+                        <p>Targeted practice in identified deficit domains bridges statutory compliance gaps before external reviews.</p>
+                        <button class="button button-light" onclick="switchTab('mcq-generator')">
+                            Launch Practice Lab <span>&rarr;</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="section-heading">
+                    <div>
+                        <span class="eyebrow">Capability Map</span>
+                        <h2>Role-Aligned Competency Matrix</h2>
+                    </div>
+                    <div class="legend">
+                        <i class="legend-bar current"></i> Assessed
+                        <i class="legend-bar target"></i> Target Requirement
+                    </div>
+                </div>
+
+                <div class="competency-list" id="gap-table-list">
+                    <!-- Populated dynamically -->
+                </div>
+
+                <div class="section-heading" style="margin-top: 36px;">
+                    <div>
+                        <span class="eyebrow">Upskilling Roadmaps</span>
+                        <h2>Curated Remediation Roadmaps</h2>
+                    </div>
+                </div>
+
+                <div class="catalog-grid" id="remediation-container">
+                    <!-- Populated dynamically -->
+                </div>
+            </section>
+
+            <section id="mcq-generator" class="tab-content">
+                <div class="page-heading">
+                    <div>
+                        <p class="eyebrow accent">Practice Lab</p>
+                        <h1>Scenario-Based AI Quiz Generator</h1>
+                        <p class="lede">Upload MoSPI learning material or enter a statistical topic to evaluate official-statistics readiness.</p>
+                    </div>
+                    <span class="tag tag-teal" style="font-size: 11px; padding: 6px 10px;">✦ Evaluated Practice</span>
+                </div>
+
+                <div class="quiz-layout">
+                    <section class="panel quiz-input-panel">
+                        <div class="panel-heading">
+                            <div>
+                                <span class="eyebrow">Parameters</span>
+                                <h2>Assessment Setup</h2>
+                            </div>
+                            <span class="updated-label">Step 1 of 2</span>
+                        </div>
+
+                        <label class="material-label" for="topic-input">Policy Topic or Karmayogi Excerpt</label>
+                        <textarea id="topic-input" placeholder="e.g., CPI revision policy, PLFS sampling, national accounts, survey quality..." aria-describedby="material-help"></textarea>
+                        <div class="upload-field">
+                            <label class="material-label" for="learning-material">Learning material</label>
+                            <input type="file" id="learning-material" accept=".pdf,.docx,.txt,.md,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,text/plain,text/markdown">
+                            <small class="privacy-note" id="material-help">Upload PDF, Word, TXT, or Markdown material. The server extracts its text and grounds the quiz in that source.</small>
+                            <span class="file-name" id="learning-material-name">No file selected</span>
+                        </div>
+
+                        <div class="quiz-settings">
+                            <label>
+                                Difficulty Level
+                                <select id="difficulty">
+                                    <option value="easy">Beginner (Foundational)</option>
+                                    <option value="medium" selected>Intermediate (Operational)</option>
+                                    <option value="hard">Advanced (Executive Decision)</option>
+                                </select>
+                            </label>
+
+                            <label>
+                                Number of Questions
+                                <input type="number" id="question-count" min="1" max="100" value="3">
+                            </label>
+                        </div>
+
+                        <button type="button" class="button button-coral full-button" id="generate-btn" onclick="handleGenerateQuiz()">
+                            <span>Generate Scenarios</span> <span>&rarr;</span>
+                        </button>
+                        <p class="privacy-note">Submitted answers automatically update your progression score.</p>
+                    </section>
+
+                    <section class="panel quiz-output-panel" id="quiz-container">
+                        <div class="empty-state">
+                            <div class="empty-icon">✦</div>
+                            <h2>Your Practice Set Will Appear Here</h2>
+                            <p>Enter an administrative topic or select a suggested deficit domain to generate situational challenges.</p>
+                            <div class="empty-lines"><i></i><i></i><i></i></div>
+                        </div>
+                    </section>
+                </div>
+            </section>
+        </div>
+    </main>
+</div>
+
+<div id="role-modal-overlay" class="modal-overlay" style="display: none;">
+    <div class="modal-card">
+        <div class="modal-icon">⚖</div>
+        <h3>Switch Operational Cadre</h3>
+        <p>Select a civil cadre to recalibrate your competency benchmarks and diagnostic progress.</p>
+        <div id="modal-role-buttons" style="display: grid; gap: 8px; margin-bottom: 18px;">
+            <!-- Injected dynamically -->
+        </div>
+        <div class="modal-actions">
+            <button type="button" class="btn-cancel" onclick="closeRoleModal()">Cancel</button>
+        </div>
+    </div>
+</div>
+
+<div id="cadre-confirm-overlay" class="modal-overlay" style="display: none;">
+    <div class="modal-card">
+        <div class="modal-icon">⚠</div>
+        <h3>Change Cadre?</h3>
+        <p>If you change your cadre, your previous progress will be deleted. Do you want to continue?</p>
+        <div class="modal-actions">
+            <button type="button" class="btn-cancel" onclick="closeCadreConfirm()">Cancel</button>
+            <button type="button" class="btn-confirm" onclick="confirmCadreChange()">Change Cadre</button>
+        </div>
+    </div>
+</div>
+
+<div class="toast" id="toast" role="status"></div>
+
+<!-- Dedicated Client Script -->
+<script src="script.js"></script>
+</body>
+</html>
